@@ -26,7 +26,7 @@ jobs:
 # Validates all of the Data Factory resources in the repository. You'll get the same validation errors as when "Validate All" is selected.
     - name: Validate
       run: npm run build validate ${{github.workspace}}/ /subscriptions/9ec75d1a-60ff-4851-8c9f-dca73c17bcd2/resourceGroups/RG-SME-DataPipeline/providers/Microsoft.DataFactory/factories/testadf54 # (2) The validate command needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance 
-      working-directory: ${{github.workspace}}/build
+      working-directory: ${{github.workspace}}
  
 
     - name: Validate and Generate ARM template
