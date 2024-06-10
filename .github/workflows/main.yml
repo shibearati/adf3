@@ -62,13 +62,13 @@ jobs:
       creds: ${{ secrets.AZURE_CREDENTIALS }}
       enable-AzPSSession: true 
 
-    - name: Deploy resources
-    uses: Azure/data-factory-deploy-action@v1.2.0
-    with:
-      resourceGroupName: myResourceGroup
-      dataFactoryName: myDataFactory
-      armTemplateFile: myArmTemplate.json
-      # armTemplateParametersFile: myArmTemplateParameters.json [optional]
-      # additionalParameters: 'key1=value key2=value keyN=value' [optional]
-      # skipAzModuleInstallation: true [optional]]
-      # skipAzModuleInstallation: true [optional]ParametersForFactory.json
+    # - name: Deploy resources
+    # uses: Azure/data-factory-deploy-action@v1.2.0
+    # with:
+    #   resourceGroupName: myResourceGroup
+    #   dataFactoryName: myDataFactory
+    #   armTemplateFile: myArmTemplate.json
+    #   # armTemplateParametersFile: myArmTemplateParameters.json [optional]
+    #   # additionalParameters: 'key1=value key2=value keyN=value' [optional]
+    #   # skipAzModuleInstallation: true [optional]]
+    #   # skipAzModuleInstallation: true [optional]ParametersForFactory.json
