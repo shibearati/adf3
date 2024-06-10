@@ -2,39 +2,52 @@ on:
   push:
     branches:
       - main
+ 
 permissions:
   id-token: write
   contents: read
+ 
 jobs:
   build:
     runs-on: ubuntu-latest
+ 
     steps:
       - uses: actions/checkout@v3
+      
+      # Set up Node.js environment with a supported version
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.4.1
         with:
           node-version: 18.x
+      
+      # Set environment variable for subscription ID
       - name: Set environment variable for subscription ID
         run: echo "SUBSCRIPTION_ID=9ec75d1a-60ff-4851-8c9f-dca73c17bcd2" >> $GITHUB_ENV
- 
+      
+      # Set environment variable for resourceGroupName
       - name: Set environment variable for resourceGroupName
         run: echo "resourceGroupName=RG-SME-DataPipeline" >> $GITHUB_ENV
- 
-        
+      
+      # Install ADF Utilities package in the correct directory
       - name: Install ADF Utilities package
         run: npm install
         working-directory: ${{github.workspace}}/adfroot/build
-        
+      
+      # Validate Data Factory resources in the repository
       - name: Validate
-        run: npm run build validate ${{github.workspace}}/adfroot/ /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54 # (2) The validate command needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance 
+        run: |
+          npm run build validate "${{github.workspace}}/adfroot/" "/subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54"
         working-directory: ${{github.workspace}}/adfroot/build
-        
+      
+      # Validate and Generate ARM template
       - name: Validate and Generate ARM template
-        run: npm run build export ${{github.workspace}}/adfroot/ /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54 "ExportedArmTemplate"  # (3) The build command, as validate, needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance. The 3rd parameter is the exported ARM template artifact name 
+        run: |
+          npm run build export "${{github.workspace}}/adfroot/" "/subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54" "ExportedArmTemplate"
         working-directory: ${{github.workspace}}/adfroot/build
-        
+      
+      # Upload the generated artifact
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ExportedArmTemplate
-          path: ${{github.workspace}}/ExportedArmTemplate
+          path: ${{github.workspace}}/adfroot/build/ExportedArmTemplate
