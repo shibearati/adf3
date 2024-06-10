@@ -2,34 +2,41 @@ on:
   push:
     branches:
       - main
+ 
 permissions:
   id-token: write
   contents: read
+ 
 jobs:
   build:
     runs-on: ubuntu-latest
+ 
     steps:
       - uses: actions/checkout@v3
+      
+      # Set up Node.js environment with a supported version
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.4.1
         with:
-          node-version: 14.x
-      - name: Set environment variable for subscription ID
-        run: echo "SUBSCRIPTION_ID=9ec75d1a-60ff-4851-8c9f-dca73c17bcd2" >> $GITHUB_ENV
-
-      - name: Set environment variable for resourceGroupName
-        run: echo "resourceGroupName=RG-SME-DataPipeline" >> $GITHUB_ENV
-
-        
+          node-version: 18.x
+      
       - name: Install ADF Utilities package
         run: npm install
-        working-directory: adfroot/build
+        working-directory: ${{github.workspace}}
+      
+      # Validate Data Factory resources in the repository
       - name: Validate
-        run: npm run build validate adfroot/build /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54
-        working-directory: adfroot/build
+        run: |
+          npm run build validate "${{github.workspace}}" "/subscriptions/9ec75d1a-60ff-4851-8c9f-dca73c17bcd2/resourceGroups/RG-SME-DataPipeline/providers/Microsoft.DataFactory/factories/testadf54"
+        working-directory: ${{github.workspace}}
+      
+      # Validate and Generate ARM template
       - name: Validate and Generate ARM template
-        run: npm run build export ${{github.workspace}}/adfroot/build /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54 ExportedArmTemplate
-        working-directory: ${{github.workspace}}/adfroot/build
+        run: |
+          npm run build export "${{github.workspace}}" "/subscriptions/9ec75d1a-60ff-4851-8c9f-dca73c17bcd2/resourceGroups/RG-SME-DataPipeline/providers/Microsoft.DataFactory/factories/testadf54" "ExportedArmTemplate"
+        working-directory: ${{github.workspace}}
+      
+      # Upload the generated artifact
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
