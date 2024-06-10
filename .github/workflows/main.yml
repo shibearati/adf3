@@ -66,33 +66,3 @@ jobs:
           name: ExportedArmTemplate
           path: ${{github.workspace}}/adfroot/build/ExportedArmTemplate
 
-        release:
-          needs: build
-          runs-on: ubuntu-latest
-          steps:
-    
- # we 1st download the previously uploaded artifact so we can leverage it later in the release job     
-      - name: Download a Build Artifact
-        uses: actions/download-artifact@v3.0.2
-        with:
-          name: ExportedArmTemplate # (5) Artifact name 
-
-
-      - name: Login via Az module
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true 
-
-      - name: data-factory-deploy
-        uses: Azure/data-factory-deploy-action@v1.2.0
-        with:
-          resourceGroupName: RG-SME-DataPipeline # (6) your target ADF resource group name
-          dataFactoryName:  testadf54 # (7) your target ADF name
-          armTemplateFile: testadf54/ARMTemplateForFactory.json # (8) ARM template file name ARMTemplateForFactory.json
-          armTemplateParametersFile: testadf54/ARMTemplateParametersForFactory.json # (9) ARM template parameters file name ARMTemplateParametersForFactory.json
-      
-         
-          # skipAzModuleInstallation:  # Parameters which skip the Az module installation. Optional, default is false.​   
