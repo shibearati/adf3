@@ -23,10 +23,10 @@ jobs:
         
       - name: Install ADF Utilities package
         run: npm install
-        working-directory: /adfroot/build
+        working-directory: adfroot/build
       - name: Validate
-        run: npm run build validate /adfroot/build /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54
-        working-directory: /adfroot/build
+        run: npm run build validate adfroot/build /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54
+        working-directory: adfroot/build
       - name: Validate and Generate ARM template
         run: npm run build export ${{github.workspace}}/adfroot/build /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54 ExportedArmTemplate
         working-directory: ${{github.workspace}}/adfroot/build
