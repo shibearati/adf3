@@ -16,14 +16,19 @@ jobs:
           node-version: 14.x
       - name: Set environment variable for subscription ID
         run: echo "SUBSCRIPTION_ID=9ec75d1a-60ff-4851-8c9f-dca73c17bcd2" >> $GITHUB_ENV
+
+      - name: Set environment variable for resourceGroupName
+        run: echo "resourceGroupName=RG-SME-DataPipeline" >> $GITHUB_ENV
+
+        
       - name: Install ADF Utilities package
         run: npm install
         working-directory: ${{github.workspace}}
       - name: Validate
-        run: npm run build validate ${{github.workspace}} /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/RG-SME-DataPipeline/providers/Microsoft.DataFactory/factories/testadf54
+        run: npm run build validate ${{github.workspace}} /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54
         working-directory: ${{github.workspace}}
       - name: Validate and Generate ARM template
-        run: npm run build export ${{github.workspace}} /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/RG-SME-DataPipeline/providers/Microsoft.DataFactory/factories/testadf54 ExportedArmTemplate
+        run: npm run build export ${{github.workspace}} /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54 ExportedArmTemplate
         working-directory: ${{github.workspace}}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
