@@ -24,12 +24,15 @@ jobs:
       - name: Install ADF Utilities package
         run: npm install
         working-directory: ${{github.workspace}}/adfroot/build
+        
       - name: Validate
         run: npm run build validate ${{github.workspace}}/adfroot/ /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54 # (2) The validate command needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance 
         working-directory: ${{github.workspace}}/adfroot/build
+        
       - name: Validate and Generate ARM template
-        run: npm run build export ${{github.workspace}}/adfroot/ /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54 ExportedArmTemplate
+        run: npm run build export ${{github.workspace}}/adfroot/ /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/<ADFname> "ExportedArmTemplate"  # (3) The build command, as validate, needs the root folder location of your repository where all the objects are stored. And the 2nd parameter is the resourceID of the ADF instance. The 3rd parameter is the exported ARM template artifact name 
         working-directory: ${{github.workspace}}/adfroot/build
+        
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
