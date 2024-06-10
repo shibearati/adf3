@@ -28,7 +28,7 @@ jobs:
         run: npm run build validate ${{github.workspace}}/adfroot/ /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54
         working-directory: adfroot/build
       - name: Validate and Generate ARM template
-        run: npm run build export ${{github.workspace}}/adfroot/build /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54 ExportedArmTemplate
+        run: npm run build export ${{github.workspace}}/adfroot/ /subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54 ExportedArmTemplate
         working-directory: ${{github.workspace}}/adfroot/build
       - name: Upload artifact
         uses: actions/upload-artifact@v3
