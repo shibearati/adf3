@@ -27,6 +27,14 @@ jobs:
       # Set environment variable for resourceGroupName
       - name: Set environment variable for resourceGroupName
         run: echo "resourceGroupName=RG-SME-DataPipeline" >> $GITHUB_ENV
+ 
+      # Debug step: List root directory contents
+      - name: List root directory contents
+        run: ls -al ${{github.workspace}}
+      
+      # Debug step: List adfroot directory contents
+      - name: List adfroot directory contents
+        run: ls -al ${{github.workspace}}/adfroot
       
       # Install ADF Utilities package in the correct directory
       - name: Install ADF Utilities package
