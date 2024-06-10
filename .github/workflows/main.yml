@@ -92,6 +92,6 @@ jobs:
           dataFactoryName: testadf54 # (7) your target ADF name
           armTemplateFile: testadf54/ARMTemplateForFactory.json # (8) ARM template file name ARMTemplateForFactory.json
           armTemplateParametersFile: testadf54/ARMTemplateParametersForFactory.json # (9) ARM template parameters file name ARMTemplateParametersForFactory.json
-          additionalParameters:
+        
           
 
