@@ -1,5 +1,3 @@
-name: Azure Data Factory Deployment
- 
 on:
   push:
     branches:
@@ -22,9 +20,6 @@ jobs:
         run: |
           echo "SUBSCRIPTION_ID=9ec75d1a-60ff-4851-8c9f-dca73c17bcd2" >> $GITHUB_ENV
           echo "resourceGroupName=RG-SME-DataPipeline" >> $GITHUB_ENV
- 
-      - name: List root directory contents
-        run: ls -al ${{ github.workspace }}
  
       - name: Ensure adfroot directory exists
         run: mkdir -p ${{ github.workspace }}/adfroot
@@ -103,11 +98,10 @@ jobs:
             exit 1
           fi
  
-      - name: Login via Az module
+      - name: Azure Login
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          enable-AzPSSession: false
  
       - name: Azure CLI script
         uses: azure/CLI@v1
