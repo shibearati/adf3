@@ -79,22 +79,38 @@ jobs:
         with:
           name: ExportedArmTemplate
  
-      
+      - name: List directory contents after download
+        run: ls -al ${{ github.workspace }}/ExportedArmTemplate
  
-       
+      - name: Verify downloaded artifact
+        run: |
+          echo "Checking for ARMTemplateForFactory.json file in downloaded artifact"
+          if [ ! -f "${{ github.workspace }}/ExportedArmTemplate/ARMTemplateForFactory.json" ]; then
+            echo "ARMTemplateForFactory.json does not exist in the downloaded artifact!"
+            exit 1
+          fi
+          echo "Checking for ARMTemplateParametersForFactory.json file in downloaded artifact"
+          if [ ! -f "${{ github.workspace }}/ExportedArmTemplate/ARMTemplateParametersForFactory.json" ]; then
+            echo "ARMTemplateParametersForFactory.json does not exist in the downloaded artifact!"
+            exit 1
+          fi
  
       - name: Login via Az module
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          
+          enable-AzPSSession: false
  
-    
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: az account show
  
       - name: data-factory-deploy
         uses: Azure/data-factory-deploy-action@v1.2.0
         with:
           resourceGroupName: RG-SME-DataPipeline
           dataFactoryName: testadf54
-          # armTemplateFile: adfroot/build/ARMTemplateForFactory.json
-          # armTemplateParametersFile: testadf54/ARMTemplateParametersForFactory.json
+          armTemplateFile: ${{ github.workspace }}/ExportedArmTemplate/ARMTemplateForFactory.json
+          armTemplateParametersFile: ${{ github.workspace }}/ExportedArmTemplate/ARMTemplateParametersForFactory.json
