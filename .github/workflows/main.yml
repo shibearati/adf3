@@ -73,8 +73,7 @@ jobs:
         with:
           name: ExportedArmTemplate
           path: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate
- 
-  [15:54] Arati Jayavant Shibe
+
 jobs:
   release:
     needs: build
