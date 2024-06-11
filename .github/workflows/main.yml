@@ -25,35 +25,49 @@ jobs:
         run: echo "resourceGroupName=RG-SME-DataPipeline" >> $GITHUB_ENV
  
       - name: List root directory contents
-        run: ls -al ${{github.workspace}}
+        run: ls -al ${{ github.workspace }}
  
       - name: List adfroot directory contents
-        run: ls -al ${{github.workspace}}/adfroot
+        run: ls -al ${{ github.workspace }}/adfroot
  
       - name: Ensure required directories exist
         run: |
-          mkdir -p ${{github.workspace}}/adfroot/{integrationRuntime,pipeline,dataset,linkedService,trigger,dataflow,credential,adfcdc,managedVirtualNetwork}
-          ls -al ${{github.workspace}}/adfroot
+          mkdir -p ${{ github.workspace }}/adfroot/{integrationRuntime,pipeline,dataset,linkedService,trigger,dataflow,credential,adfcdc,managedVirtualNetwork}
+          ls -al ${{ github.workspace }}/adfroot
  
       - name: Install ADF Utilities package
         run: npm install
-        working-directory: ${{github.workspace}}/adfroot/build
+        working-directory: ${{ github.workspace }}/adfroot/build
  
       - name: Validate
         run: |
-          npm run build validate "${{github.workspace}}/adfroot/" "/subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54"
-        working-directory: ${{github.workspace}}/adfroot/build
+          npm run build validate "${{ github.workspace }}/adfroot/" "/subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54"
+        working-directory: ${{ github.workspace }}/adfroot/build
  
       - name: Validate and Generate ARM template
         run: |
-          npm run build export "${{github.workspace}}/adfroot/" "/subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54" "ExportedArmTemplate"
-        working-directory: ${{github.workspace}}/adfroot/build
+          npm run build export "${{ github.workspace }}/adfroot/" "/subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54" "ExportedArmTemplate"
+        working-directory: ${{ github.workspace }}/adfroot/build
+ 
+      - name: Verify ARM template files
+        run: |
+          echo "Checking for ARMTemplateForFactory.json file"
+          if [ ! -f "${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json" ]; then
+            echo "ARMTemplateForFactory.json does not exist!"
+            exit 1
+          fi
+          echo "Checking for ARMTemplateParametersForFactory.json file"
+          if [ ! -f "${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json" ]; then
+            echo "ARMTemplateParametersForFactory.json does not exist!"
+            exit 1
+          fi
+        working-directory: ${{ github.workspace }}/adfroot/build
  
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ExportedArmTemplate
-          path: ${{github.workspace}}/adfroot/build/ExportedArmTemplate
+          path: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate
  
   release:
     needs: build
@@ -64,26 +78,37 @@ jobs:
         with:
           name: ExportedArmTemplate
  
+      - name: Verify downloaded artifact
+        run: |
+          echo "Checking for ARMTemplateForFactory.json file in downloaded artifact"
+          if [ ! -f "${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json" ]; then
+            echo "ARMTemplateForFactory.json does not exist in the downloaded artifact!"
+            exit 1
+          fi
+          echo "Checking for ARMTemplateParametersForFactory.json file in downloaded artifact"
+          if [ ! -f "${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json" ]; then
+            echo "ARMTemplateParametersForFactory.json does not exist in the downloaded artifact!"
+            exit 1
+          fi
+        working-directory: ${{ github.workspace }}/adfroot/build
+ 
       - name: Login via Az module
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
           enable-AzPSSession: false
-
+ 
       - name: Azure CLI script
         uses: azure/CLI@v1
         with:
           azcliversion: 2.0.72
           inlineScript: |
             az account show
-
-       
-              
  
       - name: data-factory-deploy
         uses: Azure/data-factory-deploy-action@v1.2.0
         with:
           resourceGroupName: RG-SME-DataPipeline
           dataFactoryName: testadf54
-          armTemplateFile: ${{github.workspace}}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json
-          armTemplateParametersFile: ${{github.workspace}}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json
+          armTemplateFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json
+          armTemplateParametersFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json
