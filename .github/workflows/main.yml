@@ -96,5 +96,5 @@ jobs:
         with:
           resourceGroupName: RG-SME-DataPipeline
           dataFactoryName: testadf54
-          armTemplateFile: ${{ github.workspace }}/ExportedArmTemplate/ARMTemplateForFactory.json
-          armTemplateParametersFile: ${{ github.workspace }}/ExportedArmTemplate/ARMTemplateParametersForFactory.json
+          armTemplateFile: testadf54/ARMTemplateForFactory.json
+          armTemplateParametersFile: testadf54/ARMTemplateParametersForFactory.json
