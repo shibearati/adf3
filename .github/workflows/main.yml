@@ -2,82 +2,78 @@ on:
   push:
     branches:
       - main
+ 
 permissions:
   id-token: write
   contents: read
+ 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      # Set up Node.js environment with a supported version
+ 
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.4.1
         with:
           node-version: 18.x
-      # Set environment variable for subscription ID
+ 
       - name: Set environment variable for subscription ID
         run: echo "SUBSCRIPTION_ID=9ec75d1a-60ff-4851-8c9f-dca73c17bcd2" >> $GITHUB_ENV
-      # Set environment variable for resourceGroupName
+ 
       - name: Set environment variable for resourceGroupName
         run: echo "resourceGroupName=RG-SME-DataPipeline" >> $GITHUB_ENV
-      # Debug step: List root directory contents
+ 
       - name: List root directory contents
         run: ls -al ${{github.workspace}}
-      # Debug step: List adfroot directory contents
+ 
       - name: List adfroot directory contents
         run: ls -al ${{github.workspace}}/adfroot
-      # Ensure required directories exist within adfroot
+ 
       - name: Ensure required directories exist
         run: |
           mkdir -p ${{github.workspace}}/adfroot/{integrationRuntime,pipeline,dataset,linkedService,trigger,dataflow,credential,adfcdc,managedVirtualNetwork}
           ls -al ${{github.workspace}}/adfroot
-      # Install ADF Utilities package in the correct directory
+ 
       - name: Install ADF Utilities package
         run: npm install
         working-directory: ${{github.workspace}}/adfroot/build
-      # Validate Data Factory resources in the repository
+ 
       - name: Validate
         run: |
           npm run build validate "${{github.workspace}}/adfroot/" "/subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54"
         working-directory: ${{github.workspace}}/adfroot/build
-      # Validate and Generate ARM template
+ 
       - name: Validate and Generate ARM template
         run: |
           npm run build export "${{github.workspace}}/adfroot/" "/subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54" "ExportedArmTemplate"
         working-directory: ${{github.workspace}}/adfroot/build
-      # Upload the generated artifact
+ 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
           name: ExportedArmTemplate
           path: ${{github.workspace}}/adfroot/build/ExportedArmTemplate
+ 
   release:
     needs: build
     runs-on: ubuntu-latest
     steps:
-    
- # we 1st download the previously uploaded artifact so we can leverage it later in the release job     
       - name: Download a Build Artifact
-        uses: actions/download-artifact@v3.0.2
+        uses: actions/download-artifact@v3
         with:
-          name: ExportedArmTemplate # (5) Artifact name 
-
-
+          name: ExportedArmTemplate
+ 
       - name: Login via Az module
         uses: azure/login@v1
         with:
-          client-id: "b6712074-df74-4605-8ea8-777361c9fe81"
-          tenant-id: "638456b8-8343-4e48-9ebe-4f5cf9a1997d"
-          subscription-id: "9ec75d1a-60ff-4851-8c9f-dca73c17bcd2"
-          enable-AzPSSession: true  
-
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true
+ 
       - name: data-factory-deploy
         uses: Azure/data-factory-deploy-action@v1.2.0
         with:
-          resourceGroupName: RG-SME-DataPipeline # (6) your target ADF resource group name
-          dataFactoryName: testadf54  # (7) your target ADF name
-          armTemplateFile: testadf54/ARMTemplateForFactory.json # (8) ARM template file name ARMTemplateForFactory.json
-          armTemplateParametersFile: testadf54/ARMTemplateParametersForFactory.json # (9) ARM template parameters file name ARMTemplateParametersForFactory.json
-          
-        
+          resourceGroupName: RG-SME-DataPipeline
+          dataFactoryName: testadf54
+          armTemplateFile: ${{github.workspace}}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json
+          armTemplateParametersFile: ${{github.workspace}}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json
