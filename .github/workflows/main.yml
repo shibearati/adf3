@@ -74,6 +74,8 @@ jobs:
           name: ExportedArmTemplate
           path: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate
  
+  [15:54] Arati Jayavant Shibe
+jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -83,19 +85,20 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: ExportedArmTemplate
+          path: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate
  
       - name: List directory contents after download
-        run: ls -al ${{ github.workspace }}/ExportedArmTemplate
+        run: ls -al ${{ github.workspace }}/adfroot/build/ExportedArmTemplate
  
       - name: Verify downloaded artifact
         run: |
           echo "Checking for ARMTemplateForFactory.json file in downloaded artifact"
-          if [ ! -f "${{ github.workspace }}/ExportedArmTemplate/ARMTemplateForFactory.json" ]; then
+          if [ ! -f "${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json" ]; then
             echo "ARMTemplateForFactory.json does not exist in the downloaded artifact!"
             exit 1
           fi
           echo "Checking for ARMTemplateParametersForFactory.json file in downloaded artifact"
-          if [ ! -f "${{ github.workspace }}/ExportedArmTemplate/ARMTemplateParametersForFactory.json" ]; then
+          if [ ! -f "${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json" ]; then
             echo "ARMTemplateParametersForFactory.json does not exist in the downloaded artifact!"
             exit 1
           fi
@@ -118,5 +121,5 @@ jobs:
         with:
           resourceGroupName: RG-SME-DataPipeline
           dataFactoryName: testadf54
-          armTemplateFile: ${{ github.workspace }}/ExportedArmTemplate/ARMTemplateForFactory.json
-          armTemplateParametersFile: ${{ github.workspace }}/ExportedArmTemplate/ARMTemplateParametersForFactory.json
+          armTemplateFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json
+          armTemplateParametersFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json
