@@ -82,18 +82,10 @@ jobs:
       - name: List directory contents after download
         run: ls -al ${{ github.workspace }}/ExportedArmTemplate
  
-      # - name: Verify downloaded artifact
-      #   run: |
-      #     echo "Checking for ARMTemplateForFactory.json file in downloaded artifact"
-      #     if [ ! -f "${{ github.workspace }}/ExportedArmTemplate/ARMTemplateForFactory.json" ]; then
-      #       echo "ARMTemplateForFactory.json does not exist in the downloaded artifact!"
-      #       exit 1
-      #     fi
-      #     echo "Checking for ARMTemplateParametersForFactory.json file in downloaded artifact"
-      #     if [ ! -f "${{ github.workspace }}/ExportedArmTemplate/ARMTemplateParametersForFactory.json" ]; then
-      #       echo "ARMTemplateParametersForFactory.json does not exist in the downloaded artifact!"
-      #       exit 1
-      #     fi
+      - name: Download a Build Artifact
+        uses: actions/download-artifact@v3.0.2
+        with:
+          name: ExportedArmTemplate # (5) Artifact name 
  
       - name: Login via Az module
         uses: azure/login@v1
