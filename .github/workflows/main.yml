@@ -1,3 +1,4 @@
+[22:14] Arati Jayavant Shibe
 on:
   push:
     branches:
@@ -100,9 +101,6 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      
-      - name: Validate Azure Login
-        run: az account show
       
       - name: data-factory-deploy
         uses: Azure/data-factory-deploy-action@v1.2.0
