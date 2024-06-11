@@ -1,3 +1,5 @@
+name: Azure Data Factory Deployment
+ 
 on:
   push:
     branches:
@@ -73,8 +75,7 @@ jobs:
         with:
           name: ExportedArmTemplate
           path: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate
-
-jobs:
+ 
   release:
     needs: build
     runs-on: ubuntu-latest
