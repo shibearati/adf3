@@ -52,6 +52,7 @@ jobs:
       - name: Verify ARM template files
         run: |
           echo "Checking for ARMTemplateForFactory.json file"
+          ls -al ${{ github.workspace }}/adfroot/build/ExportedArmTemplate
           if [ ! -f "${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json" ]; then
             echo "ARMTemplateForFactory.json does not exist!"
             exit 1
@@ -78,9 +79,13 @@ jobs:
         with:
           name: ExportedArmTemplate
  
+      - name: List directory contents after download
+        run: ls -al ${{ github.workspace }}
+ 
       - name: Verify downloaded artifact
         run: |
           echo "Checking for ARMTemplateForFactory.json file in downloaded artifact"
+          ls -al ${{ github.workspace }}/adfroot/build/ExportedArmTemplate
           if [ ! -f "${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json" ]; then
             echo "ARMTemplateForFactory.json does not exist in the downloaded artifact!"
             exit 1
@@ -90,13 +95,13 @@ jobs:
             echo "ARMTemplateParametersForFactory.json does not exist in the downloaded artifact!"
             exit 1
           fi
-        working-directory: ${{ github.workspace }}/adfroot/build
+        working-directory: ${{ github.workspace }}
  
       - name: Login via Az module
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-          enable-AzPSSession: false
+          enable-AzPSSession: true
  
       - name: Azure CLI script
         uses: azure/CLI@v1
