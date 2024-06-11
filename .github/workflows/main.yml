@@ -96,5 +96,5 @@ jobs:
         with:
           resourceGroupName: RG-SME-DataPipeline
           dataFactoryName: testadf54
-          armTemplateFile: adfroot/build/ARMTemplateForFactory.json
-          armTemplateParametersFile: testadf54/ARMTemplateParametersForFactory.json
+          # armTemplateFile: adfroot/build/ARMTemplateForFactory.json
+          # armTemplateParametersFile: testadf54/ARMTemplateParametersForFactory.json
