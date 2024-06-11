@@ -10,6 +10,7 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+ 
     steps:
       - uses: actions/checkout@v3
  
@@ -73,6 +74,7 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+ 
     steps:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v3
@@ -105,7 +107,8 @@ jobs:
         uses: azure/CLI@v1
         with:
           azcliversion: 2.0.72
-          inlineScript: az account show
+          inlineScript: |
+            az account show
  
       - name: data-factory-deploy
         uses: Azure/data-factory-deploy-action@v1.2.0
