@@ -3,33 +3,29 @@ on:
     branches:
       - main
  
-permissions:
-  id-token: write
-  contents: read
- 
 jobs:
   build:
     runs-on: ubuntu-latest
  
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
  
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.4.1
         with:
           node-version: 18.x
  
-      - name: Set environment variable for subscription ID
-        run: echo "SUBSCRIPTION_ID=9ec75d1a-60ff-4851-8c9f-dca73c17bcd2" >> $GITHUB_ENV
- 
-      - name: Set environment variable for resourceGroupName
-        run: echo "resourceGroupName=RG-SME-DataPipeline" >> $GITHUB_ENV
+      - name: Set environment variables
+        run: |
+          echo "SUBSCRIPTION_ID=9ec75d1a-60ff-4851-8c9f-dca73c17bcd2" >> $GITHUB_ENV
+          echo "resourceGroupName=RG-SME-DataPipeline" >> $GITHUB_ENV
  
       - name: List root directory contents
         run: ls -al ${{ github.workspace }}
  
-      - name: List adfroot directory contents
-        run: ls -al ${{ github.workspace }}/adfroot
+      - name: Ensure adfroot directory exists
+        run: mkdir -p ${{ github.workspace }}/adfroot
  
       - name: Ensure required directories exist
         run: |
@@ -49,6 +45,13 @@ jobs:
         run: |
           npm run build export "${{ github.workspace }}/adfroot/" "/subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54" "ExportedArmTemplate"
         working-directory: ${{ github.workspace }}/adfroot/build
+ 
+      - name: Verify Exported Directory
+        run: |
+          if [ ! -d "${{ github.workspace }}/adfroot/build/ExportedArmTemplate" ]; then
+            echo "ExportedArmTemplate directory does not exist!"
+            exit 1
+          fi
  
       - name: Verify ARM template files
         run: |
