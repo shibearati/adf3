@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+ 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -75,6 +76,7 @@ jobs:
   release:
     needs: build
     runs-on: ubuntu-latest
+ 
     steps:
       - name: Download a Build Artifact
         uses: actions/download-artifact@v3
@@ -102,7 +104,6 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-           
  
       - name: Install Azure PowerShell
         run: |
@@ -121,5 +122,6 @@ jobs:
           dataFactoryName: testadf54
           armTemplateFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json
           armTemplateParametersFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json
-          additionalParameters: '-factoryName $(factoryName) testadf1'
+          additionalParameters: '-factoryName $(factoryName) -kv_data_eus_01'
           skipAzModuleInstallation: true
+          enable-AzPSSession: true  # Ensure this is set to enable Azure PowerShell session
