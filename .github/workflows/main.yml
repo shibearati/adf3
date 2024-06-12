@@ -102,17 +102,12 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
-      - name: Run PrePostDeploymentScript.ps1
-        run: |
-          pwsh -File /home/runner/work/adf3/adf3/adfroot/build/ExportedArmTemplate/PrePostDeploymentScript.ps1 -Unify:$true `
-          -armTemplate "/home/runner/work/adf3/adf3/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json" `
-          -ResourceGroupName "RG-SME-DataPipeline" `
-          -DataFactoryName "testadf54" `
-          -predeployment 1 `
-          -deleteDeployment $false
-          
-        shell: pwsh
-        env:
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+      - name: data-factory-deploy
+        uses: Azure/data-factory-deploy-action@v1.2.0
+        with:
+          subscriptionId: 9ec75d1a-60ff-4851-8c9f-dca73c17bcd2
+          resourceGroupName: RG-SME-DataPipeline
+          location: East US
+          dataFactoryName: testadf54
+          armTemplateFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json
+          armTemplateParametersFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json
