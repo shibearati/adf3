@@ -1,3 +1,4 @@
+
 name: Deploy ARM Template
  
 on:
@@ -124,4 +125,4 @@ jobs:
           armTemplateParametersFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json
           additionalParameters: '-factoryName $(factoryName) -kv_data_eus_01'
           skipAzModuleInstallation: true
-          enable-AzPSSession: true  # Ensure this is set to enable Azure PowerShell session
+          enable-AzPSSession: true
