@@ -108,7 +108,7 @@ jobs:
           -armTemplate "/home/runner/work/adf3/adf3/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json" `
           -ResourceGroupName "RG-SME-DataPipeline" `
           -DataFactoryName "testadf54" `
-          -predeployment $true `
+          -predeployment 1 `
           -deleteDeployment $false
           
         shell: pwsh
