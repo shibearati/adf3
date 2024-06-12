@@ -104,7 +104,7 @@ jobs:
       
       - name: Run PrePostDeploymentScript.ps1
         run: |
-          pwsh /home/runner/work/_actions/Azure/data-factory-deploy-action/v1.2.0/PrePostDeploymentScript.ps1 `
+          pwsh -File /home/runner/work/_actions/Azure/data-factory-deploy-action/v1.2.0/PrePostDeploymentScript.ps1 `
           -armTemplate "/home/runner/work/adf3/adf3/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json" `
           -ResourceGroupName "RG-SME-DataPipeline" `
           -DataFactoryName "testadf54" `
