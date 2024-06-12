@@ -105,10 +105,10 @@ jobs:
  
       - name: Install Azure PowerShell
         run: |
-          Install-Module -Name Az -Scope CurrentUser -Repository PSGallery -Force
-          Import-Module Az
-          Connect-AzAccount -Identity
-        shell: pwsh
+          pwsh -Command "Install-Module -Name Az -AllowClobber -Force"
+          pwsh -Command "Import-Module Az"
+          pwsh -Command "Install-Module -Name Az.DataFactory -AllowClobber -Force"
+          pwsh -Command "Import-Module Az.DataFactory"
  
       - name: Verify Azure PowerShell Module Installation
         run: pwsh -Command "Get-Module -ListAvailable"
