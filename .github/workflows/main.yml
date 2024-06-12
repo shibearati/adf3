@@ -106,6 +106,9 @@ jobs:
           sudo pwsh -Command "Install-Module -Name Az -AllowClobber -Force"
           sudo pwsh -Command "Import-Module Az"
  
+      - name: Verify Azure PowerShell Module Installation
+        run: pwsh -Command "Get-Module -ListAvailable"
+ 
       - name: data-factory-deploy
         uses: Azure/data-factory-deploy-action@v1.2.0
         with:
@@ -113,5 +116,5 @@ jobs:
           dataFactoryName: testadf54
           armTemplateFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json
           armTemplateParametersFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json
-          additionalParameters: '-factoryName $(factoryName) -kv_data_eus_01'  # Parameters which will be replaced in the ARM template.
+          additionalParameters: '-factoryName $(factoryName) -kv_data_eus_01'
           skipAzModuleInstallation: true
