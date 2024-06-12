@@ -111,3 +111,4 @@ jobs:
           dataFactoryName: testadf54
           armTemplateFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json
           armTemplateParametersFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json
+          skipAzModuleInstallation: true
