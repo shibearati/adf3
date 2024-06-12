@@ -105,10 +105,11 @@ jobs:
       - name: data-factory-deploy
         uses: Azure/data-factory-deploy-action@v1.2.0
         with:
-          subscriptionId: 9ec75d1a-60ff-4851-8c9f-dca73c17bcd2
+          
           resourceGroupName: RG-SME-DataPipeline
-          location: East US
+         
           dataFactoryName: testadf54
           armTemplateFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateForFactory.json
           armTemplateParametersFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json
+          additionalParameters: '-factoryName $(factoryName) -kv_data_eus_01'  # (10) Parameters which will be replaced in the ARM template. Expected format 'key1=value key2=value keyN=value'. At the minimum here you should provide the target ADF name parameter. Check the ARMTemplateParametersForFactory.json file for all the parameters that are expected in your scenario
           skipAzModuleInstallation: true
