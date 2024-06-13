@@ -20,22 +20,28 @@ jobs:
         run: |
           echo "SUBSCRIPTION_ID=9ec75d1a-60ff-4851-8c9f-dca73c17bcd2" >> $GITHUB_ENV
           echo "resourceGroupName=RG-SME-DataPipeline" >> $GITHUB_ENV
+          
       - name: Ensure adfroot directory exists
         run: mkdir -p ${{ github.workspace }}/adfroot
+        
       - name: Ensure required directories exist
         run: |
           mkdir -p ${{ github.workspace }}/adfroot/{integrationRuntime,pipeline,dataset,linkedService,trigger,dataflow,credential,adfcdc,managedVirtualNetwork}
           ls -al ${{ github.workspace }}/adfroot
+          
       - name: Install ADF Utilities package
         run: npm install
         working-directory: ${{ github.workspace }}/adfroot/build
+        
       - name: Validate
         run: |
           npm run build validate "${{ github.workspace }}/adfroot/" "/subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54"
+          
         working-directory: ${{ github.workspace }}/adfroot/build
       - name: Validate and Generate ARM template
         run: |
           npm run build export "${{ github.workspace }}/adfroot/" "/subscriptions/${{ env.SUBSCRIPTION_ID }}/resourceGroups/${{ env.resourceGroupName }}/providers/Microsoft.DataFactory/factories/testadf54" "ExportedArmTemplate"
+          
         working-directory: ${{ github.workspace }}/adfroot/build
       - name: Verify Exported Directory
         run: |
@@ -106,6 +112,7 @@ jobs:
           
       - name: Verify Azure PowerShell Module Installation
         run: pwsh -Command "Get-Module -ListAvailable"
+        
       - name: data-factory-deploy
         uses: Azure/data-factory-deploy-action@v1.2.0
         with:
