@@ -98,11 +98,13 @@ jobs:
             exit 1
           fi
       
-      - name: Azure Login
+      - name: Login via Az module
         uses: azure/login@v1
         with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
-          enable-AzPSSession: true
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          enable-AzPSSession: true 
       
       - name: Install Azure PowerShell
         run: |
@@ -123,4 +125,4 @@ jobs:
           armTemplateParametersFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json
           additionalParameters: '-factoryName $(factoryName) -kv_data_eus_01'
           skipAzModuleInstallation: true
-          enable-AzPSSession: true
+        
