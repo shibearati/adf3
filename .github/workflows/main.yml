@@ -5,6 +5,10 @@ on:
     branches:
       - main
  
+permissions:
+  id-token: write
+  contents: read
+ 
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -71,7 +75,7 @@ jobs:
         with:
           name: ExportedArmTemplate
           path: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate
- 
+  
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -104,7 +108,7 @@ jobs:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true 
+          enable-AzPSSession: true
       
       - name: Install Azure PowerShell
         run: |
@@ -125,4 +129,3 @@ jobs:
           armTemplateParametersFile: ${{ github.workspace }}/adfroot/build/ExportedArmTemplate/ARMTemplateParametersForFactory.json
           additionalParameters: '-factoryName $(factoryName) -kv_data_eus_01'
           skipAzModuleInstallation: true
-        
