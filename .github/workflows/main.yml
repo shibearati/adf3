@@ -3,9 +3,6 @@ on:
   push:
     branches:
       - main
-permissions:
-      id-token: write
-      contents: read     
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -85,14 +82,10 @@ jobs:
             echo "ARMTemplateParametersForFactory.json does not exist in the downloaded artifact!"
             exit 1
           fi
-      - name: Login via Az module
+      - name: Azure Login
         uses: azure/login@v1
         with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
-          enable-AzPSSession: true 
-
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Install Azure PowerShell
         run: |
           pwsh -Command "Install-Module -Name Az -AllowClobber -Force"
