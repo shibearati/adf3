@@ -95,6 +95,7 @@ jobs:
           pwsh -Command "Import-Module Az.DataFactory"
           pwsh -Command "Install-Module AzureRM.DataFactoryV2"
           pwsh -Command "Get-AzDataFactoryV2Trigger -ResourceGroupName "RG-SME-DataPipeline" -DataFactoryName "testadf54""
+          pwsh -Command "Set-PSRepository -Name PSGallery -InstallationPolicy Trusted"
 
      
       - name: Verify Azure PowerShell Module Installation
