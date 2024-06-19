@@ -102,7 +102,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       
-      - name: Install Azure PowerShell Modules
+      - name: Install and Import Azure PowerShell Modules
         run: |
           pwsh -Command "Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted"
           pwsh -Command "Install-Module -Name Az -AllowClobber -Force"
@@ -111,6 +111,7 @@ jobs:
           pwsh -Command "Import-Module Az.DataFactory"
           pwsh -Command "Install-Module -Name Az.Accounts -Force"
           pwsh -Command "Import-Module Az.Accounts"
+          pwsh -Command "Connect-AzAccount"
       
       - name: Verify Azure PowerShell Module Installation
         run: pwsh -Command "Get-Module -ListAvailable"
