@@ -97,7 +97,7 @@ jobs:
           pwsh -Command "Install-Module AzureRM.DataFactoryV2"
           # pwsh -Command "Import-Module AzureRM.DataFactoryV2"
          
-          Install-Module -Name Az -Repository PSGallery -Force
+          pwsh -Command  "Install-Module -Name Az -Repository PSGallery -Force"
           pwsh -Command "Install-Module -Name Az.Accounts -Force"
           # pwsh -Command "Install-Module -Name Az.DataFactory -Force"
           pwsh -Command "Get-AzDataFactoryV2Trigger -ResourceGroupName "RG-SME-DataPipeline" -DataFactoryName "testadf54""
